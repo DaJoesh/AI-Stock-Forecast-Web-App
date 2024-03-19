@@ -12,7 +12,9 @@ const App: React.FC = () => {
       <div>
         <nav className="navbar navbar-dark">
           <div className="container">
-            <span className="navbar-brand">Your Website Name</span>
+            <a href="/" className="navbar-brand">
+              AI Stock Forecast
+            </a>
           </div>
         </nav>
 
