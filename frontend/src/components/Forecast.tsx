@@ -3,12 +3,32 @@ import React, { useState } from "react";
 const Forecast: React.FC = () => {
   const [startDate, setStartDate] = useState<string>("");
   const [tickerName, setTickerName] = useState<string>("");
-  const [forecastValue, setForecastValue] = useState<number | null>(null); //replace 'null' with the actual forecast value
+  const [forecastValue, setForecastValue] = useState<number | null>(null);
 
-  const handleForecast = () => {
-    // Perform the forecast calculation here and update the forecastValue state
-    // For now i'm setting a sample value
-    setForecastValue(123.45);
+  const handleForecast = async () => {
+    try {
+      const response = await fetch("http://127.0.0.1:5000/api/forecast", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          startDate: startDate,
+          ticker: tickerName,
+        }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setForecastValue(data.forecastValue);
+      } else {
+        throw new Error(
+          `Forecast request failed with status ${response.status}`
+        );
+      }
+    } catch (error) {
+      console.error("Error occurred:", error);
+    }
   };
 
   return (

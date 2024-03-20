@@ -1,15 +1,32 @@
-import React from "react";
-import { useNavigate, Link } from "react-router-dom";
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import "../styles/SignIn.css";
 
 const SignIn: React.FC = () => {
   const navigate = useNavigate();
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
 
-  const handleSignIn = () => {
-    // Perform sign-in logic here
+  const handleSignIn = async () => {
+    try {
+      const response = await fetch("http://127.0.0.1:5000/api/signin", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ username, password }),
+      });
 
-    // Navigate to the Forecast page
-    navigate("/forecast");
+      if (response.ok) {
+        // Navigate to the Forecast page or any other page you want to redirect to upon successful sign-in
+        navigate("/forecast");
+      } else {
+        // Handle failed sign-in
+        console.error("Sign-in failed");
+      }
+    } catch (error) {
+      console.error("Error occurred:", error);
+    }
   };
 
   return (
@@ -25,6 +42,8 @@ const SignIn: React.FC = () => {
             className="form-control"
             id="username"
             placeholder="Enter your username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
           />
         </div>
         <div className="mb-3">
@@ -36,6 +55,8 @@ const SignIn: React.FC = () => {
             className="form-control"
             id="password"
             placeholder="Enter your password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
           />
         </div>
         <button
